@@ -1,223 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Housing Cost Comparison</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Housing Cost Comparison</h1>
+      <p class="subtitle">Per person, per semester · AY 2026–27</p>
 
-<h2 class="sr-only">Side-by-side cost comparison of UW-Whitewater residence halls versus off-campus apartments, all figures per person per semester.</h2>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="setFilter('on', this)">On-campus</button>
+        <button class="filter-btn" onclick="setFilter('off', this)">Off-campus</button>
+        <button class="filter-btn" onclick="setFilter('utils', this)">Utilities</button>
+        <button class="filter-btn" onclick="setFilter('furnished', this)">Furnished</button>
+      </div>
 
-<style>
-  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
-  .filter-btn { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: pointer; transition: all 0.15s; }
-  .filter-btn.active { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
-  .filter-btn:hover:not(.active) { background: var(--color-background-secondary); }
-  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 1rem; }
-  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
-  th { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-align: left; padding: 6px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); white-space: nowrap; }
-  td { padding: 7px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); vertical-align: middle; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--color-background-secondary); }
-  .section-header td { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); background: var(--color-background-tertiary); padding: 5px 8px; letter-spacing: 0.03em; text-transform: uppercase; }
-  .cost { font-weight: 500; font-size: 13px; }
-  .cheaper { color: #0F6E56; }
-  .similar { color: var(--color-text-secondary); }
-  .pricier { color: #993C1D; }
-  .badge { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 4px; vertical-align: middle; }
-  .badge-yes { background: #E1F5EE; color: #0F6E56; }
-  .badge-no { background: #F1EFE8; color: #5F5E5A; }
-  .badge-contact { background: #FAEEDA; color: #854F0B; }
-  .dot-on { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #0F6E56; }
-  .dot-off { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #D85A30; }
-  .dot-maybe { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #BA7517; }
-  .price-bar-wrap { display: flex; align-items: center; gap: 6px; }
-  .price-bar { height: 6px; border-radius: 3px; min-width: 2px; }
-  .sort-btn { cursor: pointer; user-select: none; }
-  .sort-btn:hover { color: var(--color-text-primary); }
-  @media (max-width: 600px) { .hide-mobile { display: none; } }
-</style>
+      <div class="legend">
+        <span><div class="legend-dot low"></div> Lower cost</span>
+        <span><div class="legend-dot mid"></div> Mid range</span>
+        <span><div class="legend-dot high"></div> Higher cost</span>
+      </div>
 
-<div style="padding: 1rem 0 0;">
-  <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px;">
-    <span style="font-size: 15px; font-weight: 500; color: var(--color-text-primary);">Housing cost comparison</span>
-    <span style="font-size: 12px; color: var(--color-text-secondary);">per person, per semester · AY 2026–27</span>
-  </div>
-  <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0 0 1rem;">Off-campus monthly rents converted at 4.5 months/semester. Multi-bedroom units shown at per-person share.</p>
-
-  <div class="filter-bar">
-    <span style="font-size: 12px; color: var(--color-text-secondary);">Show:</span>
-    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
-    <button class="filter-btn" onclick="setFilter('on', this)">On-campus only</button>
-    <button class="filter-btn" onclick="setFilter('off', this)">Off-campus only</button>
-    <button class="filter-btn" onclick="setFilter('utils', this)">Utilities included</button>
-    <button class="filter-btn" onclick="setFilter('furnished', this)">Furnished</button>
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('name')">Property</th>
+            <th onclick="sortTable('unit')">Unit</th>
+            <th onclick="sortTable('cost')">Cost</th>
+            <th>Utilities</th>
+            <th>Parking</th>
+            <th>Furnished</th>
+            <th>Distance</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="legend">
-    <span><span class="legend-dot" style="background:#E1F5EE;border:1px solid #0F6E56;"></span> Cheaper than UW-W standard double ($2,515)</span>
-    <span><span class="legend-dot" style="background:#F1EFE8;border:1px solid #888780;"></span> In range ($2,515–$3,397)</span>
-    <span><span class="legend-dot" style="background:#FAECE7;border:1px solid #D85A30;"></span> More than UW-W standard single ($3,397)</span>
-  </div>
-
-  <div style="overflow-x: auto;">
-    <table id="main-table">
-      <thead>
-        <tr>
-          <th style="width:22%;" class="sort-btn" onclick="sortTable('name')">Property ↕</th>
-          <th style="width:18%;" class="sort-btn" onclick="sortTable('unit')">Unit type ↕</th>
-          <th style="width:14%;" class="sort-btn" onclick="sortTable('cost')">Cost/person/sem ↕</th>
-          <th style="width:10%;" class="hide-mobile">Utilities</th>
-          <th style="width:10%;" class="hide-mobile">Parking</th>
-          <th style="width:10%;" class="hide-mobile">Furnished</th>
-          <th style="width:16%;" class="hide-mobile">Distance</th>
-        </tr>
-      </thead>
-      <tbody id="table-body"></tbody>
-    </table>
-  </div>
-</div>
-
-<script>
-const MAX_BAR = 5500;
-
-const rows = [
-  { type:'on', name:'UW-W — Triple', unit:'Triple room', costMin:2203, costMax:2249, costStr:'$2,203–$2,249', utils:true, parking:'Campus lots', furnished:false, distance:'On campus', notes:'Most affordable on-campus' },
-  { type:'on', name:'UW-W — Standard double', unit:'Double room', costMin:2515, costMax:2630, costStr:'$2,515–$2,630', utils:true, parking:'Campus lots', furnished:false, distance:'On campus', notes:'Most common type' },
-  { type:'on', name:'UW-W — XL double', unit:'XL double room', costMin:2874, costMax:2874, costStr:'$2,874', utils:true, parking:'Campus lots', furnished:false, distance:'On campus', notes:'' },
-  { type:'on', name:'UW-W — Design single', unit:'Design single', costMin:3103, costMax:3103, costStr:'$3,103', utils:true, parking:'Campus lots', furnished:false, distance:'On campus', notes:'Wells Hall' },
-  { type:'on', name:'UW-W — Standard single', unit:'Single room', costMin:3265, costMax:3397, costStr:'$3,265–$3,397', utils:true, parking:'Campus lots', furnished:false, distance:'On campus', notes:'Private room' },
-  { type:'on', name:"UW-W — Ma'iingan pod", unit:'Pod / suite (2-person)', costMin:3466, costMax:3466, costStr:'$3,466', utils:true, parking:'Campus lots', furnished:false, distance:'On campus', notes:'' },
-  { type:'on', name:'UW-W — Pulliam suite', unit:'Suite (4-person)', costMin:3691, costMax:3691, costStr:'$3,691', utils:true, parking:'Campus lots', furnished:false, distance:'On campus', notes:'Premium suite' },
-
-  { type:'off', name:'Wegner Apts', unit:'4 bed (furnished)', costMin:2260, costMax:2260, costStr:'$2,260', utils:true, parking:'Surface lot', furnished:true, distance:'1 block', notes:'In-unit W/D' },
-  { type:'off', name:'Prairie Place', unit:'2 bed', costMin:2205, costMax:2205, costStr:'~$2,205', utils:false, parking:'Contact', furnished:false, distance:'1 block', notes:'Townhouse style' },
-  { type:'off', name:'222 S 4th St', unit:'3 bed house', costMin:2100, costMax:2100, costStr:'~$2,100', utils:true, parking:'Contact', furnished:false, distance:'Contact', notes:'Private landlord' },
-  { type:'off', name:'144 S Franklin St', unit:'5 bed house', costMin:2250, costMax:2250, costStr:'~$2,250', utils:true, parking:'Contact', furnished:false, distance:'Contact', notes:'9-month lease' },
-  { type:'off', name:'158 N Tratt St', unit:'4 bed house', costMin:2453, costMax:2453, costStr:'~$2,453', utils:true, parking:'Contact', furnished:false, distance:'Contact', notes:'10-month lease' },
-  { type:'off', name:'Regent-East Apts', unit:'2 bed (furnished)', costMin:2400, costMax:2500, costStr:'$2,400–$2,500', utils:true, parking:'Surface lot', furnished:true, distance:'Near Andersen Library', notes:'Cats & dogs ok' },
-  { type:'off', name:'Theta House', unit:'2 bed / 1 bath', costMin:2300, costMax:2400, costStr:'$2,300–$2,400', utils:true, parking:'Contact', furnished:false, distance:'Near Arts', notes:'' },
-  { type:'off', name:'Theta House', unit:'2 bed / 2 bath (larger)', costMin:2400, costMax:2500, costStr:'$2,400–$2,500', utils:true, parking:'Contact', furnished:false, distance:'Near Arts', notes:'' },
-  { type:'off', name:'Cambridge Apts', unit:'2 bed (furnished)', costMin:2500, costMax:2850, costStr:'$2,500–$2,850', utils:true, parking:'Included', furnished:true, distance:'Short walk', notes:'Built 1990' },
-  { type:'off', name:'Cambridge Apts', unit:'3 bed (furnished)', costMin:2600, costMax:2750, costStr:'$2,600–$2,750', utils:true, parking:'Included', furnished:true, distance:'Short walk', notes:'' },
-  { type:'off', name:'Springbrook Apts', unit:'3 bed / 2 bath', costMin:2548, costMax:2548, costStr:'~$2,548', utils:false, parking:'Included', furnished:false, distance:'1.6 mi', notes:'Tenant pays utilities' },
-  { type:'off', name:'Waters Edge', unit:'3 bed / 2 bath', costMin:2558, costMax:2558, costStr:'~$2,558', utils:true, parking:'On-site', furnished:false, distance:'Contact', notes:'Waterfront' },
-  { type:'off', name:'291 North', unit:'3 bed / 2 bath', costMin:2438, costMax:2438, costStr:'~$2,438', utils:false, parking:'$25–$50/mo', furnished:false, distance:'0.9 mi', notes:'Tenant pays utilities' },
-  { type:'off', name:'320 Cedar Ct', unit:'2 bed', costMin:2700, costMax:2700, costStr:'~$2,700', utils:true, parking:'Contact', furnished:false, distance:'Contact', notes:'Private landlord' },
-  { type:'off', name:'Carriage Hills', unit:'2 bed / 1 bath', costMin:2700, costMax:2700, costStr:'~$2,700', utils:false, parking:'Contact', furnished:false, distance:'Contact', notes:'Furnished option avail.' },
-  { type:'off', name:'Regent-West Apts', unit:'2 bed (furnished)', costMin:2700, costMax:2700, costStr:'$2,700', utils:true, parking:'Surface lot', furnished:true, distance:'Near Hyer Hall', notes:'Cats ok' },
-  { type:'off', name:'Seville Apts', unit:'2 bed', costMin:2756, costMax:2756, costStr:'~$2,756', utils:true, parking:'$25/mo', furnished:false, distance:'Adjacent to campus', notes:'Tenant pays electric & internet' },
-  { type:'off', name:'839 W Walworth Ave', unit:'2 bed', costMin:2813, costMax:2813, costStr:'~$2,813', utils:true, parking:'Contact', furnished:false, distance:'Contact', notes:'Private landlord' },
-  { type:'off', name:'Simon Suites', unit:'4 bed (furnished)', costMin:2650, costMax:2750, costStr:'$2,650–$2,750', utils:true, parking:'Surface lot', furnished:true, distance:'Steps from campus', notes:'Built 2019; coffee lounge' },
-  { type:'off', name:'291 North', unit:'2 bed / 2 bath', costMin:2914, costMax:2914, costStr:'~$2,914', utils:false, parking:'$25–$50/mo', furnished:false, distance:'0.9 mi', notes:'Tenant pays utilities' },
-  { type:'off', name:'551 S Clark St', unit:'2 bed duplex', costMin:2914, costMax:2914, costStr:'~$2,914', utils:true, parking:'Contact', furnished:false, distance:'Contact', notes:'Private landlord' },
-  { type:'off', name:'Prairie Place', unit:'1 bed deluxe', costMin:3105, costMax:3105, costStr:'~$3,105', utils:false, parking:'Contact', furnished:false, distance:'1 block', notes:'Townhouse style' },
-  { type:'off', name:'Cambridge Apts', unit:'2 bed + office (furnished)', costMin:3125, costMax:3200, costStr:'$3,125–$3,200', utils:true, parking:'Included', furnished:true, distance:'Short walk', notes:'Home office included' },
-  { type:'off', name:'Whitewater 500', unit:'2 bed / 2 bath', costMin:3184, costMax:3184, costStr:'~$3,184', utils:false, parking:'Included', furnished:false, distance:'0.7 mi', notes:'Built 2022; balcony' },
-  { type:'off', name:'The Element', unit:'Room in 4 bed standard', costMin:3038, costMax:3645, costStr:'~$3,038–$3,645', utils:false, parking:'Garage on-site', furnished:true, distance:'Steps from campus', notes:'In-unit laundry' },
-  { type:'off', name:'Bluff Ridge Apts', unit:'2 bed w/ garage', costMin:3036, costMax:3373, costStr:'~$3,036–$3,373', utils:false, parking:'Attached garage', furnished:false, distance:'Contact', notes:'In-unit W/D' },
-  { type:'off', name:'158 S Prince St', unit:'3 bed house', costMin:2970, costMax:2970, costStr:'~$2,970', utils:true, parking:'Contact', furnished:false, distance:'Contact', notes:'10-month lease' },
-  { type:'off', name:'Simon Suites', unit:'2 bed + office (furnished)', costMin:3200, costMax:3300, costStr:'$3,200–$3,300', utils:true, parking:'Surface lot', furnished:true, distance:'Steps from campus', notes:'Built 2019; coffee lounge' },
-  { type:'off', name:'The Element', unit:'Room in 3 bed', costMin:3713, costMax:4455, costStr:'~$3,713–$4,455', utils:false, parking:'Garage on-site', furnished:true, distance:'Steps from campus', notes:'In-unit laundry' },
-  { type:'off', name:'The Element', unit:'Room in 4 bed deluxe', costMin:3308, costMax:3969, costStr:'~$3,308–$3,969', utils:false, parking:'Garage on-site', furnished:true, distance:'Steps from campus', notes:'In-unit laundry' },
-  { type:'off', name:'Regent-East Apts', unit:'1 bed (furnished)', costMin:3300, costMax:3350, costStr:'$3,300–$3,350', utils:true, parking:'Surface lot', furnished:true, distance:'Near Andersen Library', notes:'Cats & dogs ok' },
-  { type:'off', name:'513 N Tratt St', unit:'2 bed', costMin:3600, costMax:3600, costStr:'~$3,600', utils:true, parking:'Contact', furnished:false, distance:'Contact', notes:'Private landlord' },
-  { type:'off', name:'1211 Riesch Rd', unit:'2 bed / 2 bath', costMin:3589, costMax:3690, costStr:'~$3,589–$3,690', utils:true, parking:'Surface pass', furnished:false, distance:'1.1 mi', notes:'Built 2024' },
-  { type:'off', name:'Lakeside Townhomes', unit:'3 bed end unit', costMin:3053, costMax:3428, costStr:'~$3,053–$3,428', utils:true, parking:'2-car garage', furnished:false, distance:'Near Tripp Lake', notes:'Deck & patio' },
-  { type:'off', name:'Waters Edge', unit:'2 bed / 2 bath', costMin:3431, costMax:3431, costStr:'~$3,431', utils:true, parking:'On-site', furnished:false, distance:'Contact', notes:'Waterfront; rated 5.0/5' },
-  { type:'off', name:'Springbrook Apts', unit:'2 bed / 2 bath', costMin:3485, costMax:3485, costStr:'~$3,485', utils:false, parking:'Included', furnished:false, distance:'1.6 mi', notes:'Tenant pays utilities' },
-  { type:'off', name:'Seville Apts', unit:'Studio', costMin:4388, costMax:4388, costStr:'~$4,388', utils:true, parking:'$25/mo', furnished:false, distance:'Adjacent to campus', notes:'Tenant pays electric & internet' },
-  { type:'off', name:'The Element', unit:'1 bed / 1 bath (entire)', costMin:4928, costMax:4928, costStr:'~$4,928', utils:false, parking:'Garage on-site', furnished:true, distance:'Steps from campus', notes:'In-unit laundry' },
-  { type:'off', name:'Springbrook Apts', unit:'Studio', costMin:4721, costMax:4721, costStr:'~$4,721', utils:true, parking:'Included', furnished:false, distance:'1.6 mi', notes:'Verify utils with property' },
-  { type:'off', name:'Springbrook Apts', unit:'1 bed / 1 bath', costMin:4946, costMax:4946, costStr:'~$4,946', utils:true, parking:'Included', furnished:false, distance:'1.6 mi', notes:'Verify utils with property' },
-  { type:'off', name:'Seville Apts', unit:'1 bedroom', costMin:4950, costMax:4950, costStr:'~$4,950', utils:true, parking:'$25/mo', furnished:false, distance:'Adjacent to campus', notes:'Tenant pays electric & internet' },
-  { type:'off', name:'Carriage Hills', unit:'1 bedroom', costMin:4950, costMax:4950, costStr:'~$4,950', utils:false, parking:'Contact', furnished:false, distance:'Contact', notes:'Furnished option avail.' },
-  { type:'off', name:'291 North', unit:'1 bed / 1 bath', costMin:5063, costMax:5063, costStr:'~$5,063', utils:false, parking:'$25–$50/mo', furnished:false, distance:'0.9 mi', notes:'Tenant pays all utilities' },
-  { type:'off', name:'Carriage Hills', unit:'Studio', costMin:5400, costMax:5400, costStr:'~$5,400', utils:false, parking:'Contact', furnished:false, distance:'Contact', notes:'Furnished option avail.' },
-  { type:'off', name:'1211 Riesch Rd', unit:'Studio / micro 1 bed', costMin:5378, costMax:5828, costStr:'~$5,378–$5,828', utils:true, parking:'Surface pass', furnished:false, distance:'1.1 mi', notes:'Built 2024' },
-];
-
-let currentFilter = 'all';
-let sortCol = 'cost';
-let sortDir = 1;
-
-function getBandClass(min) {
-  if (min < 2515) return 'cheaper';
-  if (min <= 3397) return 'similar';
-  return 'pricier';
-}
-
-function getBandBg(min) {
-  if (min < 2515) return 'background:#E1F5EE;';
-  if (min <= 3397) return '';
-  return 'background:#FAECE7;';
-}
-
-function utilBadge(u) {
-  if (u === true) return '<span class="badge badge-yes">Yes</span>';
-  if (u === false) return '<span class="badge badge-no">No</span>';
-  return '<span class="badge badge-contact">Contact</span>';
-}
-
-function furnBadge(f) {
-  if (f === true) return '<span class="badge badge-yes">Yes</span>';
-  return '<span class="badge badge-no">No</span>';
-}
-
-function barHtml(min, max) {
-  const pct = Math.min(100, Math.round((min / MAX_BAR) * 100));
-  const color = min < 2515 ? '#1D9E75' : min <= 3397 ? '#888780' : '#D85A30';
-  return `<div class="price-bar-wrap"><div class="price-bar" style="width:${pct}%;background:${color};"></div></div>`;
-}
-
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  render();
-}
-
-function sortTable(col) {
-  if (sortCol === col) sortDir *= -1;
-  else { sortCol = col; sortDir = 1; }
-  render();
-}
-
-function render() {
-  let data = rows.filter(r => {
-    if (currentFilter === 'on') return r.type === 'on';
-    if (currentFilter === 'off') return r.type === 'off';
-    if (currentFilter === 'utils') return r.utils === true;
-    if (currentFilter === 'furnished') return r.furnished === true;
-    return true;
-  });
-
-  data.sort((a, b) => {
-    if (sortCol === 'cost') return (a.costMin - b.costMin) * sortDir;
-    if (sortCol === 'name') return a.name.localeCompare(b.name) * sortDir;
-    if (sortCol === 'unit') return a.unit.localeCompare(b.unit) * sortDir;
-    return 0;
-  });
-
-  const tbody = document.getElementById('table-body');
-  let html = '';
-  let lastType = null;
-
-  data.forEach(r => {
-    if (r.type !== lastType) {
-      const label = r.type === 'on' ? 'UW-W on-campus residence halls' : 'Off-campus apartments';
-      html += `<tr class="section-header"><td colspan="7">${label}</td></tr>`;
-      lastType = r.type;
-    }
-    const band = getBandClass(r.costMin);
-    const bg = getBandBg(r.costMin);
-    html += `<tr>
-      <td style="${bg}font-weight:500;">${r.name}</td>
-      <td>${r.unit}</td>
-      <td><span class="cost ${band}">${r.costStr}</span>${barHtml(r.costMin, r.costMax)}</td>
-      <td class="hide-mobile">${utilBadge(r.utils)}</td>
-      <td class="hide-mobile" style="font-size:12px;color:var(--color-text-secondary);">${r.parking}</td>
-      <td class="hide-mobile">${furnBadge(r.furnished)}</td>
-      <td class="hide-mobile" style="font-size:12px;color:var(--color-text-secondary);">${r.distance}</td>
-    </tr>`;
-  });
-
-  tbody.innerHTML = html;
-}
-
-render();
-</script>
+  <script src="script.js"></script>
+</body>
+</html>
