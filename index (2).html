@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UW-Whitewater Housing Cost Comparison · AY 2026–27</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple:       #4B2E83;
+  --purple-dark:  #311D5C;
+  --purple-mid:   #5C3A9E;
+  --gold:         #C8A444;
+  --gold-light:   #F0D98A;
+  --green-bg:     #EAF5EE;
+  --green-text:   #1A5C2E;
+  --green-border: #3DAA62;
+  --amber-bg:     #FFF7E6;
+  --amber-text:   #7A4A00;
+  --amber-border: #D4920A;
+  --red-bg:       #FFF0EE;
+  --red-text:     #8C1F0F;
+  --red-border:   #D94030;
+  --gray-50:  #F8F8F8;
+  --gray-100: #F0F0F0;
+  --gray-200: #E2E2E2;
+  --gray-300: #C8C8C8;
+  --gray-400: #A0A0A0;
+  --gray-500: #787878;
+  --gray-700: #3A3A3A;
+  --gray-900: #111111;
+  --white: #FFFFFF;
+  --radius: 12px;
+  --radius-sm: 7px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #F4F2F8;
+  color: var(--gray-900);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HEADER */
+header {
+  background: var(--purple-dark);
+  position: relative;
+  overflow: hidden;
+  padding: 56px 24px 48px;
+  text-align: center;
+}
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(92,58,158,0.55) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 80% 30%, rgba(200,164,68,0.12) 0%, transparent 60%);
+}
+.header-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.header-inner { position: relative; max-width: 760px; margin: 0 auto; }
+.header-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(200,164,68,0.15);
+  border: 1px solid rgba(200,164,68,0.4);
+  color: var(--gold-light);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.header-eyebrow::before {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+header h1 {
+  font-size: clamp(26px, 5vw, 42px);
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+header h1 em { font-style: normal; color: var(--gold); }
+header p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.62);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* STATS */
+.stats-section {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+}
+.stats-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 0 20px;
+}
+.stat-card {
+  padding: 22px 16px;
+  text-align: center;
+  border-right: 1px solid var(--gray-100);
+}
+.stat-card:last-child { border-right: none; }
+.stat-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--purple);
+  display: block;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+  margin-top: 3px;
+  display: block;
+}
+
+/* MAIN */
+main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 72px; }
+
+/* CONTROLS */
+.controls-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+.controls-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+.filter-group { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+.filter-btn {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.filter-btn:hover { border-color: var(--purple); color: var(--purple); background: #F7F4FC; }
+.filter-btn.active {
+  background: var(--purple);
+  color: white;
+  border-color: var(--purple);
+  box-shadow: 0 2px 8px rgba(75,46,131,0.3);
+}
+.search-wrap { position: relative; min-width: 220px; }
+.search-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  font-size: 14px;
+  pointer-events: none;
+}
+.search-wrap input {
+  width: 100%;
+  padding: 9px 12px 9px 34px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: inherit;
+}
+.search-wrap input:focus { border-color: var(--purple); background: var(--white); }
+.search-wrap input::placeholder { color: var(--gray-400); }
+
+/* LEGEND */
+.legend-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 0 2px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+.legend-swatch { width: 28px; height: 10px; border-radius: 5px; flex-shrink: 0; }
+
+/* TABLE CARD */
+.table-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.table-header-bar {
+  padding: 16px 24px 14px;
+  border-bottom: 1px solid var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.table-title { font-size: 13px; font-weight: 700; color: var(--gray-700); }
+.row-count {
+  font-size: 12px;
+  color: var(--gray-400);
+  background: var(--gray-100);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.table-scroll { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 680px; }
+thead { background: var(--gray-50); border-bottom: 2px solid var(--gray-200); }
+th {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--gray-400);
+  text-align: left;
+  padding: 11px 16px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  user-select: none;
+}
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--purple); }
+th.sorted { color: var(--purple); }
+
+td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  color: var(--gray-700);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tbody tr { transition: background 0.1s; }
+tbody tr:hover td { background: #FAF9FC; }
+
+.section-row td {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--purple);
+  background: #F3F0FA;
+  padding: 9px 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #DDD8EC;
+}
+
+.prop-name { font-weight: 700; color: var(--gray-900); font-size: 13px; }
+.prop-sub { font-size: 11.5px; color: var(--gray-400); margin-top: 2px; }
+
+.cost-amount {
+  font-size: 14px;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 5px;
+  letter-spacing: -0.01em;
+}
+.cost-cheaper { color: var(--green-text); }
+.cost-mid     { color: var(--amber-text); }
+.cost-pricier { color: var(--red-text); }
+
+.bar-track {
+  height: 5px;
+  background: var(--gray-100);
+  border-radius: 3px;
+  overflow: hidden;
+  max-width: 120px;
+}
+.bar-fill { height: 100%; border-radius: 3px; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.badge-yes     { background: var(--green-bg);  color: var(--green-text); }
+.badge-no      { background: var(--gray-100);  color: var(--gray-400); }
+.badge-contact { background: var(--amber-bg);  color: var(--amber-text); }
+
+.row-cheaper td:first-child { border-left: 3px solid var(--green-border); }
+.row-mid     td:first-child { border-left: 3px solid var(--amber-border); }
+.row-pricier td:first-child { border-left: 3px solid var(--red-border); }
+
+.empty-state {
+  text-align: center;
+  padding: 56px 24px;
+  color: var(--gray-400);
+  font-size: 14px;
+}
+
+/* FOOTNOTE */
+.footnote {
+  margin-top: 20px;
+  padding: 16px 20px;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+  font-size: 12px;
+  color: var(--gray-500);
+  line-height: 1.7;
+}
+.footnote strong { color: var(--gray-700); }
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 32px 20px;
+  font-size: 12px;
+  color: var(--gray-400);
+  border-top: 1px solid var(--gray-200);
+  background: var(--white);
+  margin-top: 20px;
+}
+footer strong { color: var(--purple); }
+
+@media (max-width: 700px) {
+  .stats-inner { grid-template-columns: repeat(2, 1fr); }
+  .stat-card:nth-child(2) { border-right: none; }
+  .hide-sm { display: none; }
+  .controls-card { flex-direction: column; align-items: stretch; }
+  .search-wrap { min-width: 0; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-grid"></div>
+  <div class="header-inner">
+    <div class="header-eyebrow">Academic Year 2026–27 &nbsp;·&nbsp; Whitewater, WI</div>
+    <h1>UW-Whitewater<br><em>Housing Cost Comparison</em></h1>
+    <p>Per-person, per-semester cost of on-campus residence halls versus local off-campus apartments — all figures directly comparable.</p>
+  </div>
+</header>
+
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-card">
+      <span class="stat-num" id="stat-total">52</span>
+      <span class="stat-label">Housing options</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" style="color:var(--gold);">$2,203</span>
+      <span class="stat-label">Lowest per semester</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" style="color:var(--green-text);" id="stat-cheaper">—</span>
+      <span class="stat-label">Below UW-W double</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" style="color:var(--purple-mid);">$2,515</span>
+      <span class="stat-label">UW-W standard double</span>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="controls-card">
+    <span class="controls-label">Filter</span>
+    <div class="filter-group">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All options</button>
+      <button class="filter-btn" onclick="setFilter('on',this)">On-campus only</button>
+      <button class="filter-btn" onclick="setFilter('off',this)">Off-campus only</button>
+      <button class="filter-btn" onclick="setFilter('utils',this)">Utilities included</button>
+      <button class="filter-btn" onclick="setFilter('furnished',this)">Furnished</button>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">&#9906;</span>
+      <input type="text" id="search-input" placeholder="Search properties…" oninput="render()" />
+    </div>
+  </div>
+
+  <div class="legend-row">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:var(--green-border);"></div>
+      Below UW-W standard double (&lt;$2,515)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:var(--amber-border);"></div>
+      Within on-campus range ($2,515–$3,397)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:var(--red-border);"></div>
+      Above UW-W standard single (&gt;$3,397)
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header-bar">
+      <span class="table-title">All housing options — cost per person per semester</span>
+      <span class="row-count" id="row-count">52 results</span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable sorted" onclick="sortBy('name')" style="width:24%">Property <span id="ind-name">↑</span></th>
+            <th class="sortable" onclick="sortBy('unit')" style="width:20%">Unit type <span id="ind-unit">↕</span></th>
+            <th class="sortable" onclick="sortBy('cost')" style="width:17%">Cost / person / sem <span id="ind-cost">↕</span></th>
+            <th class="hide-sm" style="width:10%">Utilities</th>
+            <th class="hide-sm" style="width:10%">Furnished</th>
+            <th class="hide-sm" style="width:10%">Parking</th>
+            <th class="hide-sm" style="width:9%">Distance</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <strong>Methodology:</strong> Off-campus monthly rents converted at <strong>4.5 months per semester</strong>. Multi-bedroom off-campus units shown at the <strong>per-person share</strong> (total divided equally by bedrooms) for direct comparison with per-person residence hall rates. UW-W on-campus rates include all utilities. Off-campus utility inclusion varies — see the Utilities column. All rates reflect proposed AY 2026–27 figures. Contact individual properties to confirm current pricing.
+  </div>
+</main>
+
+<footer>
+  Compiled for <strong>University of Wisconsin–Whitewater</strong> Housing Services &nbsp;·&nbsp; AY 2026–27 &nbsp;·&nbsp; All figures are estimates only.
+</footer>
+
+<script>
+const MAX_BAR = 5600;
+
+const data = [
+  {type:'on',  name:"UW-W — Triple rooms",        unit:'Triple room',               costMin:2203, costMax:2249, costStr:'$2,203–$2,249', utils:true,  furnished:false, parking:'Campus lots',        distance:'On campus',            notes:'Most affordable on-campus option'},
+  {type:'on',  name:"UW-W — Standard double",     unit:'Double room',               costMin:2515, costMax:2630, costStr:'$2,515–$2,630', utils:true,  furnished:false, parking:'Campus lots',        distance:'On campus',            notes:'Most common room type'},
+  {type:'on',  name:"UW-W — XL double",           unit:'Extra-large double',        costMin:2874, costMax:2874, costStr:'$2,874',         utils:true,  furnished:false, parking:'Campus lots',        distance:'On campus',            notes:'Larger room footprint'},
+  {type:'on',  name:"UW-W — Design single",       unit:'Design single',             costMin:3103, costMax:3103, costStr:'$3,103',         utils:true,  furnished:false, parking:'Campus lots',        distance:'On campus',            notes:'Wells Hall design rooms'},
+  {type:'on',  name:"UW-W — Standard single",     unit:'Single room',               costMin:3265, costMax:3397, costStr:'$3,265–$3,397', utils:true,  furnished:false, parking:'Campus lots',        distance:'On campus',            notes:'Private room; shared amenities'},
+  {type:'on',  name:"UW-W \u2014 Ma\u2019iingan pod", unit:'Pod / suite (2-person)',costMin:3466, costMax:3466, costStr:'$3,466',         utils:true,  furnished:false, parking:'Campus lots',        distance:'On campus',            notes:'Unique pod-style living'},
+  {type:'on',  name:"UW-W — Pulliam suite",       unit:'Suite (4-person)',          costMin:3691, costMax:3691, costStr:'$3,691',         utils:true,  furnished:false, parking:'Campus lots',        distance:'On campus',            notes:'Premium suite option'},
+  {type:'off', name:'222 S 4th St',               unit:'3 bed house',               costMin:2100, costMax:2100, costStr:'~$2,100',        utils:true,  furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'Private landlord; split 3 ways'},
+  {type:'off', name:'Prairie Place',              unit:'2 bedroom',                 costMin:2205, costMax:2205, costStr:'~$2,205',        utils:false, furnished:false, parking:'Contact property',   distance:'1 block from campus',  notes:'Townhouse style; split 2 ways'},
+  {type:'off', name:'144 S Franklin St',          unit:'5 bed house',               costMin:2250, costMax:2250, costStr:'~$2,250',        utils:true,  furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'9-month lease; split 5 ways'},
+  {type:'off', name:'Wegner Apts',                unit:'4 bed (furnished)',          costMin:2260, costMax:2260, costStr:'$2,260',         utils:true,  furnished:true,  parking:'Surface lot',        distance:'1 block from campus',  notes:'In-unit W/D; per bed/semester billing'},
+  {type:'off', name:'Theta House',                unit:'2 bed / 1 bath',            costMin:2300, costMax:2400, costStr:'$2,300–$2,400', utils:true,  furnished:false, parking:'Contact property',   distance:'Near Arts programs',   notes:'By-the-bed leasing; $600 deposit'},
+  {type:'off', name:'Regent-East Apts',           unit:'2 bed (furnished)',          costMin:2400, costMax:2500, costStr:'$2,400–$2,500', utils:true,  furnished:true,  parking:'Surface lot',        distance:'Near Andersen Library', notes:'Cats & dogs ok; $600 deposit'},
+  {type:'off', name:'Theta House',                unit:'2 bed / 2 bath (larger)',   costMin:2400, costMax:2500, costStr:'$2,400–$2,500', utils:true,  furnished:false, parking:'Contact property',   distance:'Near Arts programs',   notes:'Larger unit; $600 deposit'},
+  {type:'off', name:'291 North',                  unit:'3 bed / 2 bath',            costMin:2438, costMax:2438, costStr:'~$2,438',        utils:false, furnished:false, parking:'$25–$50/mo',         distance:'0.9 mi from campus',   notes:'Split 3 ways; fitness center; tenant pays utilities'},
+  {type:'off', name:'158 N Tratt St',             unit:'4 bed house',               costMin:2453, costMax:2453, costStr:'~$2,453',        utils:true,  furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'10-month lease; split 4 ways'},
+  {type:'off', name:'Cambridge Apts',             unit:'2 bed (furnished)',          costMin:2500, costMax:2850, costStr:'$2,500–$2,850', utils:true,  furnished:true,  parking:'Included',           distance:'Short walk to campus', notes:'Built 1990; 36 units; $600 deposit'},
+  {type:'off', name:'Springbrook Apts',           unit:'3 bed / 2 bath',            costMin:2548, costMax:2548, costStr:'~$2,548',        utils:false, furnished:false, parking:'Included',           distance:'1.6 mi from campus',   notes:'Split 3 ways; in-unit W/D; tenant pays utilities'},
+  {type:'off', name:'Waters Edge',                unit:'3 bed / 2 bath',            costMin:2558, costMax:2558, costStr:'~$2,558',        utils:true,  furnished:false, parking:'On-site',            distance:'Contact property',     notes:'Waterfront; split 3 ways'},
+  {type:'off', name:'Cambridge Apts',             unit:'3 bed (furnished)',          costMin:2600, costMax:2750, costStr:'$2,600–$2,750', utils:true,  furnished:true,  parking:'Included',           distance:'Short walk to campus', notes:'$900 deposit'},
+  {type:'off', name:'Simon Suites',               unit:'4 bed (furnished)',          costMin:2650, costMax:2750, costStr:'$2,650–$2,750', utils:true,  furnished:true,  parking:'Surface lot',        distance:'Steps from campus',    notes:'Built 2019; coffee lounge; controlled access'},
+  {type:'off', name:'Regent-West Apts',           unit:'2 bed (furnished)',          costMin:2700, costMax:2700, costStr:'$2,700',         utils:true,  furnished:true,  parking:'Surface lot',        distance:'Near Hyer Hall',       notes:'Cats ok; $600 deposit'},
+  {type:'off', name:'320 Cedar Ct',               unit:'2 bed',                     costMin:2700, costMax:2700, costStr:'~$2,700',        utils:true,  furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'Private landlord; split 2 ways'},
+  {type:'off', name:'Carriage Hills',             unit:'2 bed / 1 bath',            costMin:2700, costMax:2700, costStr:'~$2,700',        utils:false, furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'Split 2 ways; pet friendly; furnished option available'},
+  {type:'off', name:'Seville Apts',               unit:'2 bedroom',                 costMin:2756, costMax:2756, costStr:'~$2,756',        utils:true,  furnished:false, parking:'$25/mo',             distance:'Adjacent to campus',   notes:'Split 2 ways; tenant pays electric & internet'},
+  {type:'off', name:'839 W Walworth Ave',         unit:'2 bed',                     costMin:2813, costMax:2813, costStr:'~$2,813',        utils:true,  furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'Private landlord; split 2 ways'},
+  {type:'off', name:'291 North',                  unit:'2 bed / 2 bath',            costMin:2914, costMax:2914, costStr:'~$2,914',        utils:false, furnished:false, parking:'$25–$50/mo',         distance:'0.9 mi from campus',   notes:'Split 2 ways; tenant pays utilities'},
+  {type:'off', name:'551 S Clark St',             unit:'2 bed / 1 bath duplex',     costMin:2914, costMax:2914, costStr:'~$2,914',        utils:true,  furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'Private landlord; split 2 ways'},
+  {type:'off', name:'158 S Prince St',            unit:'3 bed / 2 bath house',      costMin:2970, costMax:2970, costStr:'~$2,970',        utils:true,  furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'10-month lease; split 3 ways'},
+  {type:'off', name:'Bluff Ridge Apts',           unit:'2 bed / 1 bath w/ garage',  costMin:3036, costMax:3373, costStr:'~$3,036–$3,373',utils:false, furnished:false, parking:'Attached garage',    distance:'Contact property',     notes:'Split 2 ways; in-unit W/D; fitness center'},
+  {type:'off', name:'The Element',                unit:'Room in 4 bed standard',    costMin:3038, costMax:3645, costStr:'~$3,038–$3,645',utils:false, furnished:true,  parking:'Garage on-site',     distance:'Steps from campus',    notes:'Per-person; in-unit laundry'},
+  {type:'off', name:'Lakeside Townhomes',         unit:'3 bed exposed end unit',    costMin:3053, costMax:3428, costStr:'~$3,053–$3,428',utils:true,  furnished:false, parking:'2-car garage',       distance:'Near Tripp Lake',      notes:'Split 3 ways; deck & patio'},
+  {type:'off', name:'Prairie Place',              unit:'1 bed deluxe',              costMin:3105, costMax:3105, costStr:'~$3,105',        utils:false, furnished:false, parking:'Contact property',   distance:'1 block from campus',  notes:'Townhouse style; $300 deposit'},
+  {type:'off', name:'Cambridge Apts',             unit:'2 bed + office (furnished)', costMin:3125, costMax:3200, costStr:'$3,125–$3,200',utils:true,  furnished:true,  parking:'Included',           distance:'Short walk to campus', notes:'Home office included'},
+  {type:'off', name:'Whitewater 500',             unit:'2 bed / 2 bath',            costMin:3184, costMax:3184, costStr:'~$3,184',        utils:false, furnished:false, parking:'Included',           distance:'0.7 mi from campus',   notes:'Split 2 ways; built 2022; balcony; tenant pays electric/gas/internet'},
+  {type:'off', name:'Simon Suites',               unit:'2 bed + office (furnished)', costMin:3200, costMax:3300, costStr:'$3,200–$3,300',utils:true,  furnished:true,  parking:'Surface lot',        distance:'Steps from campus',    notes:'Built 2019; coffee lounge; controlled access'},
+  {type:'off', name:'The Element',                unit:'Room in 4 bed deluxe',      costMin:3308, costMax:3969, costStr:'~$3,308–$3,969',utils:false, furnished:true,  parking:'Garage on-site',     distance:'Steps from campus',    notes:'Per-person; deluxe floor plan; in-unit laundry'},
+  {type:'off', name:'Regent-East Apts',           unit:'1 bed (furnished)',          costMin:3300, costMax:3350, costStr:'$3,300–$3,350', utils:true,  furnished:true,  parking:'Surface lot',        distance:'Near Andersen Library', notes:'Cats & dogs ok; $300 deposit'},
+  {type:'off', name:'Waters Edge',                unit:'2 bed / 2 bath (Westshire)', costMin:3431, costMax:3431, costStr:'~$3,431',       utils:true,  furnished:false, parking:'On-site',            distance:'Contact property',     notes:'Split 2 ways; waterfront; rated 5.0/5; balcony'},
+  {type:'off', name:'Springbrook Apts',           unit:'2 bed / 2 bath',            costMin:3485, costMax:3485, costStr:'~$3,485',        utils:false, furnished:false, parking:'Included',           distance:'1.6 mi from campus',   notes:'Split 2 ways; in-unit W/D; tenant pays utilities'},
+  {type:'off', name:'1211 Riesch Rd',             unit:'2 bed / 2 bath',            costMin:3589, costMax:3690, costStr:'~$3,589–$3,690',utils:true,  furnished:false, parking:'Surface pass',       distance:'1.1 mi from campus',   notes:'Split 2 ways; built 2024; in-unit W/D'},
+  {type:'off', name:'513 N Tratt St',             unit:'2 bed',                     costMin:3600, costMax:3600, costStr:'~$3,600',        utils:true,  furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'Private landlord; split 2 ways'},
+  {type:'off', name:'The Element',                unit:'Room in 3 bed',             costMin:3713, costMax:4455, costStr:'~$3,713–$4,455',utils:false, furnished:true,  parking:'Garage on-site',     distance:'Steps from campus',    notes:'Per-person; in-unit laundry'},
+  {type:'off', name:'Seville Apts',               unit:'Studio',                    costMin:4388, costMax:4388, costStr:'~$4,388',        utils:true,  furnished:false, parking:'$25/mo',             distance:'Adjacent to campus',   notes:'Tenant pays electric & internet; cats only'},
+  {type:'off', name:'Springbrook Apts',           unit:'Studio (utils incl.)',      costMin:4721, costMax:4721, costStr:'~$4,721',        utils:true,  furnished:false, parking:'Included',           distance:'1.6 mi from campus',   notes:'In-unit W/D; verify utilities with property'},
+  {type:'off', name:'The Element',                unit:'1 bed / 1 bath (entire)',   costMin:4928, costMax:4928, costStr:'~$4,928',        utils:false, furnished:true,  parking:'Garage on-site',     distance:'Steps from campus',    notes:'Entire unit; in-unit laundry; community lounge'},
+  {type:'off', name:'Seville Apts',               unit:'1 bedroom',                 costMin:4950, costMax:4950, costStr:'~$4,950',        utils:true,  furnished:false, parking:'$25/mo',             distance:'Adjacent to campus',   notes:'Tenant pays electric & internet; cats only'},
+  {type:'off', name:'Carriage Hills',             unit:'1 bedroom',                 costMin:4950, costMax:4950, costStr:'~$4,950',        utils:false, furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'Pet friendly; furnished option; $500 move-in bonus'},
+  {type:'off', name:'Springbrook Apts',           unit:'1 bed / 1 bath (utils incl.)', costMin:4946, costMax:4946, costStr:'~$4,946',   utils:true,  furnished:false, parking:'Included',           distance:'1.6 mi from campus',   notes:'In-unit W/D; verify utilities with property'},
+  {type:'off', name:'291 North',                  unit:'1 bed / 1 bath',            costMin:5063, costMax:5063, costStr:'~$5,063',        utils:false, furnished:false, parking:'$25–$50/mo',         distance:'0.9 mi from campus',   notes:'Tenant pays all utilities; fitness center; dog park'},
+  {type:'off', name:'1211 Riesch Rd',             unit:'Studio / micro 1 bed',      costMin:5378, costMax:5828, costStr:'~$5,378–$5,828',utils:true,  furnished:false, parking:'Surface pass',       distance:'1.1 mi from campus',   notes:'Built 2024; in-unit W/D'},
+  {type:'off', name:'Carriage Hills',             unit:'Studio',                    costMin:5400, costMax:5400, costStr:'~$5,400',        utils:false, furnished:false, parking:'Contact property',   distance:'Contact property',     notes:'Pet friendly; furnished option available'},
+];
+
+let activeFilter = 'all';
+let sortCol = 'cost';
+let sortDir = 1;
+
+function band(min) {
+  if (min < 2515) return 'cheaper';
+  if (min <= 3397) return 'mid';
+  return 'pricier';
+}
+function costClass(min) {
+  if (min < 2515) return 'cost-cheaper';
+  if (min <= 3397) return 'cost-mid';
+  return 'cost-pricier';
+}
+function barColor(min) {
+  if (min < 2515) return '#3DAA62';
+  if (min <= 3397) return '#D4920A';
+  return '#D94030';
+}
+function utilBadge(u) {
+  if (u === true)  return '<span class="badge badge-yes">&#10003; Yes</span>';
+  if (u === false) return '<span class="badge badge-no">No</span>';
+  return '<span class="badge badge-contact">Contact</span>';
+}
+function furnBadge(f) {
+  return f
+    ? '<span class="badge badge-yes">&#10003; Yes</span>'
+    : '<span class="badge badge-no">No</span>';
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function sortBy(col) {
+  document.querySelectorAll('th.sorted').forEach(t => t.classList.remove('sorted'));
+  ['name','unit','cost'].forEach(c => {
+    const el = document.getElementById('ind-' + c);
+    if (el) el.textContent = '↕';
+  });
+  if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+  const el = document.getElementById('ind-' + col);
+  if (el) {
+    el.closest('th').classList.add('sorted');
+    el.textContent = sortDir === 1 ? '↑' : '↓';
+  }
+  render();
+}
+
+function render() {
+  const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+
+  let filtered = data.filter(r => {
+    const matchF =
+      activeFilter === 'all' ||
+      (activeFilter === 'on'        && r.type === 'on') ||
+      (activeFilter === 'off'       && r.type === 'off') ||
+      (activeFilter === 'utils'     && r.utils === true) ||
+      (activeFilter === 'furnished' && r.furnished === true);
+    const matchS = !q ||
+      r.name.toLowerCase().includes(q) ||
+      r.unit.toLowerCase().includes(q) ||
+      r.notes.toLowerCase().includes(q);
+    return matchF && matchS;
+  });
+
+  filtered.sort((a, b) => {
+    if (sortCol === 'cost') return (a.costMin - b.costMin) * sortDir;
+    if (sortCol === 'name') return a.name.localeCompare(b.name) * sortDir;
+    if (sortCol === 'unit') return a.unit.localeCompare(b.unit) * sortDir;
+    return 0;
+  });
+
+  const cheaper = data.filter(r => r.costMin < 2515).length;
+  document.getElementById('stat-cheaper').textContent = cheaper;
+  document.getElementById('stat-total').textContent = data.length;
+  document.getElementById('row-count').textContent =
+    filtered.length + ' result' + (filtered.length !== 1 ? 's' : '');
+
+  const tbody = document.getElementById('table-body');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No results match your search or filters.</td></tr>';
+    return;
+  }
+
+  let html = '';
+  let lastType = null;
+
+  filtered.forEach(r => {
+    if (r.type !== lastType) {
+      const label = r.type === 'on'
+        ? 'UW-Whitewater on-campus residence halls'
+        : 'Off-campus apartments';
+      html += `<tr class="section-row"><td colspan="7">${label}</td></tr>`;
+      lastType = r.type;
+    }
+    const b = band(r.costMin);
+    const pct = Math.min(100, Math.round((r.costMin / MAX_BAR) * 100));
+    html += `<tr class="row-${b}">
+      <td>
+        <div class="prop-name">${r.name}</div>
+        ${r.notes ? `<div class="prop-sub">${r.notes}</div>` : ''}
+      </td>
+      <td style="color:var(--gray-600);font-size:13px;">${r.unit}</td>
+      <td>
+        <span class="cost-amount ${costClass(r.costMin)}">${r.costStr}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${barColor(r.costMin)};"></div></div>
+      </td>
+      <td class="hide-sm">${utilBadge(r.utils)}</td>
+      <td class="hide-sm">${furnBadge(r.furnished)}</td>
+      <td class="hide-sm" style="font-size:12px;color:var(--gray-500);">${r.parking}</td>
+      <td class="hide-sm" style="font-size:12px;color:var(--gray-500);">${r.distance}</td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
